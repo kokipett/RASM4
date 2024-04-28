@@ -3,6 +3,11 @@
 .equ	BUFFER,	21
 
 	.data
+headPtr:  .quad  0                        // Head of the linked list
+tailPtr:  .quad  0                        // Tail of the linked list
+
+newNodePtr:        .quad 0                    // Used for creating a new node
+currentPtr:        .quad 0                    // Used for traversing the linked list
 
 szMsg1:	.asciz "		MASM4 TEXT EDITOR"
 szMsg2:	.asciz "	Data Structure Heap Memory Consumption: "
