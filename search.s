@@ -1,4 +1,3 @@
-//Koki Pettigrew
 .global search
 
    .data
@@ -13,6 +12,12 @@
 	szBuf:	.skip	512
 	szPar2:	.asciz	"]: "
 
+
+	szMsg1:	.asciz	"("
+	szMsg2:	.asciz	" hits in 1 file of 1 searched)"
+
+
+	szBuf1:	.skip	21
 
 	chLF:	.byte	0x0a
    .text
@@ -29,10 +34,11 @@ search:
 
 	MOV	X20,X0	//store search string ptr in x20
 
+	mov	x29,#0	//hit counter
       MOV    X19,X1
 
    traverse_top:
-	ADD	X21,X21,#1	//increment node counter
+
 //	LDR	X0,=szTest2
 //	BL	putstring
 
@@ -48,6 +54,8 @@ search:
 	     // B        traverse_top
 
    traverse_exit:
+
+
       //LDR    X30,[SP], #16       	     // POP LR
       //LDR    X19,[SP], #16            // POP LR
       B		exit
@@ -69,6 +77,8 @@ search:
 
 
 		Print:
+			ADD	x29,x29,#1
+
 			//print node number
 			B	printNodeNum
 			printcont:
@@ -79,6 +89,7 @@ search:
 			BL	putch
 
 		Next:
+			ADD	X21,X21,#1	//increment node counter
 			ADD     X19,X19,#8                    // Jump the X1 -> next field
       			B        traverse_top
 
@@ -99,6 +110,20 @@ search:
 		b	printcont
 
 exit:
+
+		ldr	x0,=szMsg1
+			bl	putstring
+//			ADD	x29,x29,#1
+			mov	x0,x29
+			ldr	x1,=szBuf1
+			bl	int64asc
+			ldr	x0,=szBuf1
+			bl	putstring
+
+		ldr	x0,=szMsg2
+			bl	putstring
+
+
 
    ldp   x29, x30, [sp], #16     // Pop x29 and x30, then move SP up 16 bytes
    ldp   x27, x28, [sp], #16     // Pop x27 and x28, then move SP up 16 bytes
